@@ -1,9 +1,9 @@
 name: Test, Build, and Deploy | Modul 01 Lab2.2 Senior Project
- 
+
 on:
   push:
     branches: [ main ]
- 
+
 jobs:
   test-build:
     runs-on: ubuntu-latest
@@ -21,41 +21,40 @@ jobs:
       - run: npm run build
 
   deploy:
-      needs: test-build
-      runs-on: ubuntu-latest
+    needs: test-build
+    runs-on: ubuntu-latest
 
-      strategy:
-        matrix:
-          node-version: [16.x]
+    strategy:
+      matrix:
+        node-version: [16.x]
 
-      steps:
-          -name: Build app on VM
-          uses: appleboy/ssh-action@master
-          with:
-            host: ${{ secrets.HOST }}
-            username: ${{ secrets.USERNAME }}
-            password: ${{ secrets.PASSWORD }}
-            port: ${{ secrets.PORT }}
-            script: |
-              eval "$(ssh-agent -s)"
-              ssh-add ~/.ssh/ssh-praktikan91
-              echo "Check project folder";
-              [ ! -d "${HOME}/SenPro/senpro-github-action/" ] &&
-              {
-                echo "Repository has not been cloned. Cloning ... ";
-              mkdir -p ~/SenPro/modul02;
-              cd ~/SenPro/modul02;
-              git clone https://github.com/joshjovancio-ugm/senpro-github-action.git;
-              cd ~/SenPro/modul02/senpro-github-action;
-              echo "Install Packages and Build Project";
-              npm install;
-              npm run build;
-              } || {
-              echo "Repository already exists. Building ... ";
-              cd ~/SenPro/senpro-github-action;
-              git restore .;
-              git pull origin main;
-              echo "Install Packages and Build Project";
-              npm install;
-              npm run build;
-              }
+    steps:
+      - name: Build app on VM
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            eval "$(ssh-agent -s)"
+            ssh-add ~/.ssh/ssh-praktikan91
+            echo "Check project folder";
+            [ ! -d "${HOME}/SenPro/senpro-github-action/" ] &&
+            { echo "Repository has not been cloned. Cloning ... ";
+            mkdir -p ~/SenPro/modul02;
+            cd ~/SenPro/modul02;
+            git clone https://github.com/joshjovancio-ugm/senpro-github-action.git;
+            cd ~/SenPro/modul02/senpro-github-action;
+            echo "Install Packages and Build Project";
+            npm install;
+            npm run build;
+            } || {
+            echo "Repository already exists. Building ... ";
+            cd ~/SenPro/senpro-github-action;
+            git restore .;
+            git pull origin main;
+            echo "Install Packages and Build Project";
+            npm install;
+            npm run build;
+            }
