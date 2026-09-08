@@ -54,6 +54,7 @@ jobs:
                 npm run build;
               } || 
               {
+              
                 echo "Repository already exists. Building ... ";
                 cd ~/SenPro/senpro-github-action;
                 git restore .;
