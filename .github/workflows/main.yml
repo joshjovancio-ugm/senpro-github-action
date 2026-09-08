@@ -30,31 +30,25 @@ jobs:
 
     steps:
       - name: Build app on VM
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
-            eval "$(ssh-agent -s)"
-            ssh-add ~/.ssh/ssh-praktikan91
-            echo "Check project folder";
-            [ ! -d "${HOME}/SenPro/senpro-github-action/" ] &&
-            { echo "Repository has not been cloned. Cloning ... ";
-            mkdir -p ~/SenPro/modul02;
-            cd ~/SenPro/modul02;
-            git clone https://github.com/joshjovancio-ugm/senpro-github-action.git;
-            cd ~/SenPro/modul02/senpro-github-action;
-            echo "Install Packages and Build Project";
-            npm install;
-            npm run build;
-            } || {
-            echo "Repository already exists. Building ... ";
-            cd ~/SenPro/senpro-github-action;
-            git restore .;
-            git pull origin main;
-            echo "Install Packages and Build Project";
-            npm install;
-            npm run build;
-            }
+            cd "C:\Users\Josh Jovancio\SenPro"
+            
+            if not exist "senpro-github-action" (
+                echo "Repository missing. Cloning..."
+                git clone https://github.com/joshjovancio-ugm/senpro-github-action.git
+            )
+            
+            cd "senpro-github-action"
+            echo "Updating repository..."
+            git restore .
+            git pull origin main
+            
+            echo "Installing dependencies and building..."
+            call npm install
+            call npm run build
