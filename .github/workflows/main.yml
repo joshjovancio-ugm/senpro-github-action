@@ -38,7 +38,6 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd "C:\Users\Josh Jovancio\SenPro"
-
             if not exist "senpro-github-action" (
                 echo "Repository missing. Cloning..."
                 git clone https://github.com/joshjovancio-ugm/senpro-github-action.git
