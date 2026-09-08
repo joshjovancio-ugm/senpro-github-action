@@ -7,9 +7,11 @@ on:
 jobs:
   test-build:
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         node-version: [16.x]
+
     steps:
       - uses: actions/checkout@v4
       - name: Testing Build pre-Deploy
@@ -43,19 +45,20 @@ jobs:
               [ ! -d "${HOME}/SenPro/senpro-github-action/" ] &&
               {
                 echo "Repository has not been cloned. Cloning ... ";
-              mkdir -p ~/SenPro/modul02;
-              cd ~/SenPro/modul02;
-              git clone https://github.com/joshjovancio-ugm/senpro-github-action.git;
-              cd ~/SenPro/modul02/senpro-github-action;
-              echo "Install Packages and Build Project";
-              npm install;
-              npm run build;
-              } || {
-              echo "Repository already exists. Building ... ";
-              cd ~/SenPro/senpro-github-action;
-              git restore .;
-              git pull origin main;
-              echo "Install Packages and Build Project";
-              npm install;
-              npm run build;
+                mkdir -p ~/SenPro/modul02;
+                cd ~/SenPro/modul02;
+                git clone https://github.com/joshjovancio-ugm/senpro-github-action.git;
+                cd ~/SenPro/modul02/senpro-github-action;
+                echo "Install Packages and Build Project";
+                npm install;
+                npm run build;
+              } || 
+              {
+                echo "Repository already exists. Building ... ";
+                cd ~/SenPro/senpro-github-action;
+                git restore .;
+                git pull origin main;
+                echo "Install Packages and Build Project";
+                npm install;
+                npm run build;
               }
